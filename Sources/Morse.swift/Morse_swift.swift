@@ -4,6 +4,7 @@ public struct Morse {
     public protocol MorseCodable:CaseIterable {
         static var name: String {get}
         func toMorse() -> String
+        func comparator() -> String
     }
     
     static public func KnownCodes() -> [any MorseCodable.Type] {
@@ -19,7 +20,7 @@ public struct Morse {
         
         for char in upper {
             let chars = LatinCharacters.allCases.filter { c in
-                c.rawValue == String(char)
+                c.comparator() == String(char)
             }
             
             for char in chars {
@@ -30,9 +31,38 @@ public struct Morse {
         return built
     }
     
+    static public func latin(from morse: String) -> String {
+        ""
+    }
+    
     enum ArabicNumerals: String, CaseIterable, MorseCodable {
         static let name = "ArabicNumerals"
         case ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO
+        func comparator() -> String {
+            switch self {
+                
+            case .ONE:
+                "1"
+            case .TWO:
+                "2"
+            case .THREE:
+                "3"
+            case .FOUR:
+                "4"
+            case .FIVE:
+                "5"
+            case .SIX:
+                "6"
+            case .SEVEN:
+                "7"
+            case .EIGHT:
+                "8"
+            case .NINE:
+                "9"
+            case .ZERO:
+                "0"
+            }
+        }
         
         func toMorse() -> String {
             switch self {
@@ -53,6 +83,10 @@ public struct Morse {
     enum LatinCharacters: String, CaseIterable, MorseCodable {
         static let name = "LatinCharacters"
         case A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, SPACE, DOT, DASH
+        
+        func comparator() -> String {
+            self.rawValue
+        }
         
         func toMorse() -> String {
             switch self {
@@ -89,11 +123,21 @@ public struct Morse {
         }
     }
     
-    enum Symbols: String {
+    enum Symbols: String, CaseIterable {
         case dit = "."             // base time unit
         case dah = "-"             // 3 dits
         case infraSpace = " "      // space within character (1 dit)
         case letterSpace = "   "   // space between letters (3 dits)
         case wordSpace = "       " // space between words (7 dits)
+        static public func ditTime() -> Double {
+            0.2
+        }
+        static public func Timings() -> [String:Double] {
+            [Symbols.dit.rawValue : ditTime(),
+             Symbols.dah.rawValue : 3 * ditTime(),
+             Symbols.infraSpace.rawValue : ditTime(),
+             Symbols.letterSpace.rawValue : 3 * ditTime(),
+             Symbols.wordSpace.rawValue : 7 * ditTime()]
+        }
     }
 }

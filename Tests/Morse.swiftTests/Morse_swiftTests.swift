@@ -29,3 +29,21 @@ import Testing
                                     Morse.Symbols.dit.rawValue + Morse.Symbols.dit.rawValue + Morse.Symbols.dit.rawValue
     )
 }
+
+@Test func testSYmbolTimings() {
+    #expect(
+        Morse.Symbols.Timings()[Morse.Symbols.dit.rawValue] == Morse.Symbols.ditTime()
+    )
+    #expect(
+        Morse.Symbols.Timings()[Morse.Symbols.dah.rawValue] == 3 * Morse.Symbols.ditTime()
+    )
+    #expect(
+        Morse.Symbols.Timings()[Morse.Symbols.infraSpace.rawValue] == Morse.Symbols.ditTime()
+    )
+    #expect(
+        Morse.Symbols.Timings()[Morse.Symbols.letterSpace.rawValue] == 3 * Morse.Symbols.ditTime()
+    )
+    #expect(
+        Morse.Symbols.Timings()[Morse.Symbols.wordSpace.rawValue] == 7 * Morse.Symbols.ditTime()
+    )
+}

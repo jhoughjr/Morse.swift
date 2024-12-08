@@ -22,8 +22,12 @@ public struct Morse {
             let chars = LatinCharacters.allCases.filter { c in
                 c.comparator() == String(char)
             }
+           
             
             for char in chars {
+                if char.rawValue == " " {
+                    print("space")
+                }
                 built += char.toMorse()
             }
         }
@@ -85,7 +89,12 @@ public struct Morse {
         case A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, SPACE, DOT, DASH
         
         func comparator() -> String {
-            self.rawValue
+            if self != .SPACE {
+                return self.rawValue
+            }else {
+                return " "
+            }
+            
         }
         
         func toMorse() -> String {
@@ -116,7 +125,7 @@ public struct Morse {
                 case .X: return "-..-"
                 case .Y: return "-.--"
                 case .Z: return "--.."
-                case .SPACE: return " "
+                case .SPACE: return "       "
                 case .DOT: return "."
                 case .DASH: return "-"
             }

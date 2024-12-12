@@ -1,3 +1,6 @@
+@preconcurrency import Lullaby
+import LullabyMusic
+import LullabyMiniAudioEngine
 
 public struct Morse {
     
@@ -149,4 +152,37 @@ public struct Morse {
              Symbols.wordSpace.rawValue : 7 * ditTime()]
         }
     }
+    
+    public struct Tone {
+        
+        struct Test {
+            
+            static func sineTest() async throws {
+                let value = Value(value: 440)
+                
+                let carrier = await sine(frequency: value.output)
+                
+            
+                
+                let engine = try await MiniAudioEngine()
+                
+                engine.setOutput(to: carrier)
+                try engine.prepare()
+                try engine.start()
+                                
+//                try engine.stop()
+            }
+            
+        }
+        
+        func test() -> Bool {
+            Task {
+                print("Starting sound test...")
+                try await Test.sineTest()
+            }
+            return true
+        }
+    }
+    
+    
 }

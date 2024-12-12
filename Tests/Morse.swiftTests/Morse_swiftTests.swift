@@ -31,18 +31,17 @@ import Testing
 }
 
    
-func fuck() -> String {
+func notABadWord() -> String {
     Morse.Symbols.dit.rawValue + Morse.Symbols.dit.rawValue + Morse.Symbols.dit.rawValue +
     Morse.Symbols.dah.rawValue + Morse.Symbols.dah.rawValue + Morse.Symbols.dah.rawValue +
     Morse.Symbols.dit.rawValue + Morse.Symbols.dit.rawValue + Morse.Symbols.dit.rawValue +
     Morse.Symbols.wordSpace.rawValue + Morse.Symbols.dit.rawValue + Morse.Symbols.dit.rawValue + Morse.Symbols.dit.rawValue +  Morse.Symbols.dah.rawValue + Morse.Symbols.dah.rawValue + Morse.Symbols.dah.rawValue +
     Morse.Symbols.dit.rawValue + Morse.Symbols.dit.rawValue + Morse.Symbols.dit.rawValue
-  
 }
     
 @Test func testSOSphrase() {
     #expect(
-        Morse.morse(from: "sos sos") == fuck()
+        Morse.morse(from: "sos sos") == notABadWord()
     )
 }
 
@@ -62,4 +61,12 @@ func fuck() -> String {
     #expect(
         Morse.Symbols.Timings()[Morse.Symbols.wordSpace.rawValue] == 7 * Morse.Symbols.ditTime()
     )
+}
+
+@Test func testSound() {
+    #expect(
+        Morse.Tone().test()
+    )
+    
+
 }

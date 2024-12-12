@@ -28,10 +28,7 @@ public struct Morse {
            
             
             for char in chars {
-                if char.rawValue == " " {
-                    print("space")
-                }
-                built += char.toMorse()
+                built += char.toMorse() + Symbols.letterSpace.rawValue
             }
         }
         

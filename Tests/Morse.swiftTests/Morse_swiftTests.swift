@@ -74,7 +74,7 @@ func notABadWord() -> String {
 
 @Test func testLatinFromMorse() {
     #expect(
-        Morse.latin(from: Morse.morse(from: "hello world")) == "hello world"
+        Morse.latin(from: Morse.morse(from: "hello world")) == "HELLO WORLD"
     )
     
     

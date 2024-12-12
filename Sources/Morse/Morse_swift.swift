@@ -26,7 +26,6 @@ public struct Morse {
                 c.comparator() == String(char)
             }
            
-            
             for char in chars {
                 built += char.toMorse() + Symbols.letterSpace.rawValue
             }
@@ -36,7 +35,36 @@ public struct Morse {
     }
     
     static public func latin(from morse: String) -> String {
-        ""
+        var built = ""
+        
+        let splitByWords = morse.split(separator: Symbols.wordSpace.rawValue)
+        for word in splitByWords {
+            print("Checking word \(word) in morse")
+            
+            let letters = word.split(separator: Symbols.letterSpace.rawValue)
+            for unknownLetter in letters {
+                for letter in LatinCharacters.allCases.filter({ c in
+                    if c == .DOT {
+                        return false
+                    }
+                    if c == .DASH {
+                        return false
+                    }
+                    return true
+                }) {
+//                    print("checking \(unknownLetter) : for morse letter \(letter.rawValue)")
+                    if letter.toMorse() == unknownLetter {
+                        print("\(unknownLetter) is \(letter)")
+                        built += letter.rawValue
+                    }
+                }
+            }
+            built += " "
+        }
+        
+       
+        
+        return built.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     enum ArabicNumerals: String, CaseIterable, MorseCodable {

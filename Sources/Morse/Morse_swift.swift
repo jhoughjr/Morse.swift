@@ -155,31 +155,45 @@ public struct Morse {
     
     public struct Tone {
         
-        struct Test {
+        public struct Test {
             
-            static func sineTest() async throws {
+            public static func sineTest() async throws {
                 let value = Value(value: 440)
                 
                 let carrier = await sine(frequency: value.output)
                 
-            
+                let task = Task {
+                    for i in twelveToneEqualTemperamentTuning.pitches {
+                        await value.setValue(Sample(i * 440))
+                        await Task.sleep(seconds: 0.5)
+                    }
+                    
+                    return
+                }
                 
                 let engine = try await MiniAudioEngine()
                 
                 engine.setOutput(to: carrier)
                 try engine.prepare()
                 try engine.start()
-                                
-//                try engine.stop()
+                
+                await task.value
+                
+                try engine.stop()
             }
             
         }
         
-        func test() -> Bool {
+        static public func test() -> Bool {
             Task {
-                print("Starting sound test...")
-                try await Test.sineTest()
+                do {
+                    try await Test.sineTest()
+                }
+                catch {
+                    print(error.localizedDescription)
+                }
             }
+            
             return true
         }
     }

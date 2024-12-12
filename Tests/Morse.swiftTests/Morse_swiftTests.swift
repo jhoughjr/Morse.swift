@@ -1,5 +1,5 @@
 import Testing
-@testable import Morse_swift
+@testable import Morse
 
 @Test func testLatinCharactersAndArabicNumeralsAreKnownCodes() {
     #expect(
@@ -65,8 +65,17 @@ func notABadWord() -> String {
 
 @Test func testSound() {
     #expect(
-        Morse.Tone().test()
+        Morse.Tone.test()
     )
     
 
+}
+
+
+@Test func testLatinFromMorse() {
+    #expect(
+        Morse.latin(from: Morse.morse(from: "hello world")) == "hello world"
+    )
+    
+    
 }

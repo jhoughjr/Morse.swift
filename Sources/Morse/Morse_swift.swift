@@ -9,14 +9,14 @@ public struct Morse {
         func toMorse() -> String
         func comparator() -> String
     }
-    
+
+    //MARK -- Functions
     static public func KnownCodes() -> [any MorseCodable.Type] {
         
         [LatinCharacters.self,
          ArabicNumerals.self,
         ]
     }
-    
     static public func isTextMorse(_ input: String) -> Bool {
         // not optimal
         var flag = false
@@ -37,7 +37,6 @@ public struct Morse {
         }
         return flag
     }
-    
     static public func morse(from input: String, verbose: Bool = false) -> String {
         let upper = input.uppercased()
         var built = ""
@@ -54,7 +53,6 @@ public struct Morse {
         
         return built
     }
-    
     static public func latin(from morse: String, verbose: Bool = false) -> String {
         var built = ""
         
@@ -89,6 +87,7 @@ public struct Morse {
         return built.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
+    //MARK -- Enums
     enum ArabicNumerals: String, CaseIterable, MorseCodable {
         static let name = "ArabicNumerals"
         case ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO
@@ -182,7 +181,7 @@ public struct Morse {
         }
     }
     
-    enum Symbols: String, CaseIterable {
+    public enum Symbols: String, CaseIterable {
         case dit = "."             // base time unit
         case dah = "-"             // 3 dits
         case infraSpace = " "      // space within character (1 dit)
@@ -200,6 +199,7 @@ public struct Morse {
         }
     }
     
+    //MARK -- Structures
     public struct Tone {
         
         public struct Test {

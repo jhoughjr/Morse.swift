@@ -16,35 +16,42 @@ struct morset: AsyncParsableCommand{
         case fromMorse = "from"
     }
     
-    @Argument(help: "Text to convert to or from morse code.")
-    var text: String
-    
     @Option(name: .shortAndLong, help: "To or from Morse code. Defaults to 'to'.")
     var mode: Mode = .toMorse
     
-    static var configuration: CommandConfiguration{
-        CommandConfiguration(
-            commandName: "morset",
-            abstract: "Convert text to and from Morse code."
-        )
-    }
+    @Option(name: .shortAndLong, help: "Verbosity of conversion output. Defaults to false.")
+    var verbosity: Bool = false
     
-    func run() throws -> String {
+    @Argument(help: "Text to convert to or from morse code.")
+    var text: String
+    
+//    static var configuration: CommandConfiguration{
+//        CommandConfiguration(
+//            commandName: "morset",
+//            abstract: "Convert text to and from Morse code."
+//        )
+//    }
+    
+    func run() throws  {
+        
         var retVal = ""
         switch mode{
         case .toMorse:
-            let morseText = Morse.morse(from: text)
-            print("\(text) -> ")
+            let morseText = Morse.morse(from: text, verbose: verbosity)
+            if verbosity {
+                print("\(text) -> ")
+            }
+            
             print("\(morseText)")
             
         case .fromMorse:
-            let latinText = Morse.latin(from: text)
-            print("\(text) -> ")
+            let latinText = Morse.latin(from: text, verbose: verbosity)
+            if verbosity {
+                print("\(text) -> ")
+            }
             print("\(latinText)")
             retVal = latinText
         }
-        return retVal
-
     }
 }
 

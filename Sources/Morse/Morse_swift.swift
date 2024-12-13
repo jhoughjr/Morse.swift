@@ -17,7 +17,7 @@ public struct Morse {
         ]
     }
     
-    static public func morse(from input: String) -> String {
+    static public func morse(from input: String, verbose: Bool = false) -> String {
         let upper = input.uppercased()
         var built = ""
         
@@ -34,12 +34,12 @@ public struct Morse {
         return built
     }
     
-    static public func latin(from morse: String) -> String {
+    static public func latin(from morse: String, verbose: Bool = false) -> String {
         var built = ""
         
         let splitByWords = morse.split(separator: Symbols.wordSpace.rawValue)
         for word in splitByWords {
-            print("Checking word \(word) in morse")
+            if verbose {print("Checking word \(word) in morse")}
             
             let letters = word.split(separator: Symbols.letterSpace.rawValue)
             for unknownLetter in letters {
@@ -54,7 +54,8 @@ public struct Morse {
                 }) {
 //                    print("checking \(unknownLetter) : for morse letter \(letter.rawValue)")
                     if letter.toMorse() == unknownLetter {
-                        print("\(unknownLetter) is \(letter)")
+                        if verbose {print("\(unknownLetter) is \(letter)")}
+                        
                         built += letter.rawValue
                     }
                 }

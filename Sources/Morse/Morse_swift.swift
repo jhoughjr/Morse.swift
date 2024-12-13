@@ -239,5 +239,4 @@ public struct Morse {
         }
     }
     
-    
 }

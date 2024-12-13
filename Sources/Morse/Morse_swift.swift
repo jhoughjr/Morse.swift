@@ -232,15 +232,9 @@ public struct Morse {
         }
         
         static public func test() -> Bool {
-            Task {
-                do {
-                    try await Test.sineTest()
-                }
-                catch {
-                    print(error.localizedDescription)
-                }
-            }
+          let task =  Task(operation: Test.sineTest)
             
+            task.cancel()
             return true
         }
     }

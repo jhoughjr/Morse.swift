@@ -12,6 +12,7 @@ import ArgumentParser
 struct morset: AsyncParsableCommand{
     
     public enum Mode: String, CaseIterable, ExpressibleByArgument{
+        // maybe init a mode by inferring the type of text at some point...
         case toMorse = "to"
         case fromMorse = "from"
     }
@@ -33,7 +34,6 @@ struct morset: AsyncParsableCommand{
 //    }
     
     func run() throws  {
-        
         var retVal = ""
         var trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
         

@@ -17,6 +17,27 @@ public struct Morse {
         ]
     }
     
+    static public func isTextMorse(_ input: String) -> Bool {
+        // not optimal
+        var flag = false
+        input.forEach { c in
+            flag =  Symbols.allCases.filter({ c2 in
+                return c2.rawValue == String(c)
+            }).count == input.count
+            
+        }
+        return flag
+    }
+    static public func isTextLatin(_ input: String) -> Bool {
+        var flag = false
+        input.forEach { c in
+            flag = LatinCharacters.allCases.filter({ c2 in
+                return c2.comparator() == String(c)
+            }).count == input.count
+        }
+        return flag
+    }
+    
     static public func morse(from input: String, verbose: Bool = false) -> String {
         let upper = input.uppercased()
         var built = ""

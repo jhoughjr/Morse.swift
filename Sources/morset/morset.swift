@@ -9,20 +9,42 @@ import Morse
 import ArgumentParser
 @main
 
-struct morset:AsyncParsableCommand{
+struct morset: AsyncParsableCommand{
     
-    @Argument(help: "Text to convert to morse code.") var text: String
+    public enum Mode: String, CaseIterable, ExpressibleByArgument{
+        case toMorse = "to"
+        case fromMorse = "from"
+    }
+    
+    @Argument(help: "Text to convert to or from morse code.")
+    var text: String
+    
+    @Option(name: .shortAndLong, help: "To or from Morse code. Defaults to 'to'.")
+    var mode: Mode = .toMorse
     
     static var configuration: CommandConfiguration{
         CommandConfiguration(
             commandName: "morset",
-            abstract: "Convert text to morse code."
+            abstract: "Convert text to and from Morse code."
         )
     }
     
-    func run() throws{
-        print("\(text) -> ")
-        print(Morse.morse(from: text))
+    func run() throws -> String {
+        var retVal = ""
+        switch mode{
+        case .toMorse:
+            let morseText = Morse.morse(from: text)
+            print("\(text) -> ")
+            print("\(morseText)")
+            
+        case .fromMorse:
+            let latinText = Morse.latin(from: text)
+            print("\(text) -> ")
+            print("\(latinText)")
+            retVal = latinText
+        }
+        return retVal
+
     }
 }
 

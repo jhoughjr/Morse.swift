@@ -35,23 +35,25 @@ struct morset: AsyncParsableCommand{
     func run() throws  {
         
         var retVal = ""
+        var trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if verbosity {
+            print("\(trimmedText) -> ")
+        }
+        
         switch mode{
         case .toMorse:
-            let morseText = Morse.morse(from: text, verbose: verbosity)
-            if verbosity {
-                print("\(text) -> ")
-            }
-            
-            print("\(morseText)")
+            let morseText = Morse.morse(from: trimmedText, verbose: verbosity)
+           
+            retVal = morseText
             
         case .fromMorse:
-            let latinText = Morse.latin(from: text, verbose: verbosity)
-            if verbosity {
-                print("\(text) -> ")
-            }
-            print("\(latinText)")
+            let latinText = Morse.latin(from: trimmedText, verbose: verbosity)
             retVal = latinText
         }
+        
+        print(retVal)
+
     }
 }
 

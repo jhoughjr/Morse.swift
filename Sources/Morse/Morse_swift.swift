@@ -174,7 +174,7 @@ public struct Morse {
                 case .X: return "-..-"
                 case .Y: return "-.--"
                 case .Z: return "--.."
-                case .SPACE: return "       "
+                case .SPACE: return " " //
                 case .DOT: return "."
                 case .DASH: return "-"
             }

@@ -1,3 +1,4 @@
+
 public struct Morse {
 
     public protocol MorseCodable: CaseIterable {
@@ -14,6 +15,7 @@ public struct Morse {
             ArabicNumerals.self,
         ]
     }
+    
     static public func isTextMorse(_ input: String) -> Bool {
         // not optimal
         var flag = false
@@ -52,6 +54,7 @@ public struct Morse {
 
         return built
     }
+    
     static public func latin(from morse: String, verbose: Bool = false) -> String {
         var built = ""
 
@@ -80,8 +83,8 @@ public struct Morse {
             }
             built += " "
         }
-
-        return built.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return built //.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     //MARK -- Enums
@@ -198,45 +201,4 @@ public struct Morse {
             ]
         }
     }
-
-    //MARK -- Structures
-    public struct Tone {
-
-        public struct Test {
-
-            public static func sineTest() async throws {
-                let value = Value(value: 440)
-
-                let carrier = await sine(frequency: value.output)
-
-                let task = Task {
-                    for i in twelveToneEqualTemperamentTuning.pitches {
-                        await value.setValue(Sample(i * 440))
-                        await Task.sleep(seconds: 0.5)
-                    }
-
-                    return
-                }
-
-                let engine = try await MiniAudioEngine()
-
-                engine.setOutput(to: carrier)
-                try engine.prepare()
-                try engine.start()
-
-                await task.value
-
-                try engine.stop()
-            }
-
-        }
-
-        static public func test() -> Bool {
-            let task = Task(operation: Test.sineTest)
-
-            task.cancel()
-            return true
-        }
-    }
-
 }

@@ -67,7 +67,11 @@ public struct Morse {
                     built += m
                     print("\(loggerID)| +\(m)")
                     // only add letterspace to internal letters, ie not the last
-                    if chars.firstIndex(of: char) != chars.endIndex {
+                    let i = chars.firstIndex(of: char)
+                    let end = chars.endIndex
+                    
+                    print("\(loggerID)| i=\(i) \(end)")
+                    if i != end {
                         built +=  Symbols.letterSpace.rawValue
                         print("\(loggerID)| +letterspace='\(Symbols.letterSpace.rawValue)'")
                     }

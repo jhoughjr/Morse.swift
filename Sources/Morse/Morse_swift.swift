@@ -163,10 +163,10 @@ public struct Morse {
 
         func comparator() -> String {
             if self != .SPACE {
-                print("\(loggerID)| comparator> returning \(self.rawValue)")
+//                print("\(loggerID)| comparator> returning \(self.rawValue)")
                 return self.rawValue
             } else {
-                print("\(loggerID)| comparator> returning \(Symbols.wordSpace.rawValue)")
+//                print("\(loggerID)| comparator> returning \(Symbols.wordSpace.rawValue)")
                 return Symbols.wordSpace.rawValue
             }
 

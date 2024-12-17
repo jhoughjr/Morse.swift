@@ -60,11 +60,16 @@ public struct Morse {
                 
                 for char in chars {
                     built += char.toMorse()
-                    built +=  Symbols.letterSpace.rawValue
-
+                    // only add letterspace to internal letters, ie not the last
+                    if chars.firstIndex(of: char) != chars.endIndex - 1 {
+                        built +=  Symbols.letterSpace.rawValue
+                    }
                 }
             }
-            built += Symbols.wordSpace.rawValue
+            // only add wordspace to not the last word
+            if latinWords.firstIndex(of: word) != latinWords.endIndex {
+                built += Symbols.wordSpace.rawValue
+            }
         }
      
 

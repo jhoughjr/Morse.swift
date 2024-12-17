@@ -44,7 +44,7 @@ public struct Morse {
         input.split(separator: Symbols.letterSpace.rawValue).map({$0.uppercased()})
     }
     
-    static public func morse(from input: String, verbose: Bool = false) -> String {
+    static public func morse(from input: String, verbose: Bool = true) -> String {
         // need to break into words first
         let latinWords = words(from: input)
         

@@ -69,12 +69,6 @@ public struct Morse {
             let letters = word.split(separator: Symbols.letterSpace.rawValue)
             for unknownLetter in letters {
                 for letter in LatinCharacters.allCases.filter({ c in
-                    if c == .DOT {
-                        return false
-                    }
-                    if c == .DASH {
-                        return false
-                    }
                     return true
                 }) {
                     //                    print("checking \(unknownLetter) : for morse letter \(letter.rawValue)")
@@ -146,7 +140,8 @@ public struct Morse {
             if self != .SPACE {
                 return self.rawValue
             } else {
-                return " "
+                print("found space in latin characters")
+                return "       "
             }
 
         }

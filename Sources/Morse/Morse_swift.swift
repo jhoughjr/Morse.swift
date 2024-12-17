@@ -59,7 +59,10 @@ public struct Morse {
             for char in upper {
                 let chars = LatinCharacters.allCases.filter { c in
                     print("\(loggerID)| checking \(c) against \(char)")
-                    return c.comparator() == String(char)
+                    let match = c.comparator() == String(char)
+                    print("\(loggerID)| match = \(match)")
+
+                    return match
                 }
                 print("\(loggerID)| chars = \(chars)")
                 for char in chars {

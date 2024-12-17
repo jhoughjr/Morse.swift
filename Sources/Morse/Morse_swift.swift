@@ -50,9 +50,9 @@ public struct Morse {
 
             for char in chars {
                 built += char.toMorse()
-                if char == .SPACE {
-                 built +=  Symbols.letterSpace.rawValue
-                }
+//                if char == .SPACE {
+//                 built +=  Symbols.letterSpace.rawValue
+//                }
             }
         }
 

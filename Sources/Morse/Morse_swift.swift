@@ -59,7 +59,7 @@ public struct Morse {
                 let chars = LatinCharacters.allCases.filter { c in
                     c.comparator() == String(char)
                 }
-                print("\(chars)")
+                print("chars = \(chars)")
                 for char in chars {
                     built += char.toMorse()
                     // only add letterspace to internal letters, ie not the last

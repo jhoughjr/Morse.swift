@@ -41,7 +41,7 @@ public struct Morse {
     }
     
     static public func words(from input: String) -> [String] {
-        input.split(separator: Symbols.letterSpace.rawValue).map({$0.uppercased()})
+        input.split(separator: " ").map({$0.uppercased()})
     }
     
     static public func morse(from input: String, verbose: Bool = true) -> String {
@@ -160,7 +160,7 @@ public struct Morse {
             if self != .SPACE {
                 return self.rawValue
             } else {
-                print("found space in latin characters")
+                print("found space in latin characters, returning wordspace")
                 return "       "
             }
 
@@ -215,10 +215,14 @@ public struct Morse {
         
         static public func Timings() -> [String: Double] {
             [
+                // base time unit
                 Symbols.dit.rawValue: ditTime(),
                 Symbols.dah.rawValue: 3 * ditTime(),
+                // space between symbols in the same letter
                 Symbols.infraSpace.rawValue: ditTime(),
+                // space between letters in the same word
                 Symbols.letterSpace.rawValue: 3 * ditTime(),
+                // space between words
                 Symbols.wordSpace.rawValue: 7 * ditTime(),
             ]
         }

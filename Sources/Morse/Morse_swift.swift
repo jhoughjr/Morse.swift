@@ -68,7 +68,7 @@ public struct Morse {
                     // only add letterspace to internal letters, ie not the last
                     if chars.firstIndex(of: char) != chars.endIndex {
                         built +=  Symbols.letterSpace.rawValue
-                        print("\(loggerID)| +letterspace=' \(Symbols.letterSpace.rawValue)'")
+                        print("\(loggerID)| +letterspace='\(Symbols.letterSpace.rawValue)'")
                     }
                 }
             }
@@ -162,10 +162,11 @@ public struct Morse {
 
         func comparator() -> String {
             if self != .SPACE {
+                print("\(loggerID)| comparator> returning \(self.rawValue)")
                 return self.rawValue
             } else {
-                print("found space in latin characters, returning wordspace")
-                return "       "
+                print("\(loggerID)| comparator> returning \(Symbols.wordSpace.rawValue)")
+                return Symbols.wordSpace.rawValue
             }
 
         }

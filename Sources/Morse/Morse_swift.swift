@@ -38,6 +38,7 @@ public struct Morse {
         }
         return flag
     }
+    
     static public func morse(from input: String, verbose: Bool = false) -> String {
         let upper = input.uppercased()
         var built = ""
@@ -48,7 +49,10 @@ public struct Morse {
             }
 
             for char in chars {
-                built += char.toMorse() + Symbols.letterSpace.rawValue
+                built += char.toMorse()
+                if char == .SPACE {
+                 built +=  Symbols.letterSpace.rawValue
+                }
             }
         }
 
@@ -183,14 +187,17 @@ public struct Morse {
     }
 
     public enum Symbols: String, CaseIterable {
+        
         case dit = "."  // base time unit
         case dah = "-"  // 3 dits
         case infraSpace = " "  // space within character (1 dit)
         case letterSpace = "   "  // space between letters (3 dits)
         case wordSpace = "       "  // space between words (7 dits)
+        
         static public func ditTime() -> Double {
-            0.2
+            0.1
         }
+        
         static public func Timings() -> [String: Double] {
             [
                 Symbols.dit.rawValue: ditTime(),

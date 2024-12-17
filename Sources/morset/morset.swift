@@ -7,9 +7,10 @@
 
 import Morse
 import ArgumentParser
+
 @main
 
-struct morset: AsyncParsableCommand{
+struct morset: AsyncParsableCommand {
     
     public enum Mode: String, CaseIterable, ExpressibleByArgument{
         // maybe init a mode by inferring the type of text at some point...
@@ -26,16 +27,9 @@ struct morset: AsyncParsableCommand{
     @Argument(help: "Text to convert to or from morse code.")
     var text: String
     
-//    static var configuration: CommandConfiguration{
-//        CommandConfiguration(
-//            commandName: "morset",
-//            abstract: "Convert text to and from Morse code."
-//        )
-//    }
-    
     func run() throws  {
         var retVal = ""
-        var trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if verbosity {
             print("\(trimmedText) -> ")

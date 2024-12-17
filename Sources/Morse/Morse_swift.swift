@@ -58,7 +58,8 @@ public struct Morse {
             let upper = word.uppercased()
             for char in upper {
                 let chars = LatinCharacters.allCases.filter { c in
-                    c.comparator() == String(char)
+                    print("\(loggerID)| checking \(c) against \(char)")
+                    return c.comparator() == String(char)
                 }
                 print("\(loggerID)| chars = \(chars)")
                 for char in chars {

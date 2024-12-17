@@ -45,6 +45,7 @@ public struct Morse {
     }
     
     static public func morse(from input: String, verbose: Bool = true) -> String {
+        print("input= \(input)")
         // need to break into words first
         let latinWords = words(from: input)
         print("\(latinWords.count) words")
@@ -58,11 +59,11 @@ public struct Morse {
                 let chars = LatinCharacters.allCases.filter { c in
                     c.comparator() == String(char)
                 }
-                
+                print("\(chars)")
                 for char in chars {
                     built += char.toMorse()
                     // only add letterspace to internal letters, ie not the last
-                    if chars.firstIndex(of: char) != chars.endIndex - 1 {
+                    if chars.firstIndex(of: char) != chars.endIndex {
                         built +=  Symbols.letterSpace.rawValue
                         print("letterspace")
                     }

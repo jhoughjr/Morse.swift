@@ -1,6 +1,7 @@
 
 public struct Morse {
-
+    static let loggerID = "Morse"
+    
     public protocol MorseCodable: CaseIterable {
         static var name: String { get }
         func toMorse() -> String
@@ -45,33 +46,35 @@ public struct Morse {
     }
     
     static public func morse(from input: String, verbose: Bool = true) -> String {
-        print("input= \(input)")
+        print("\(loggerID)| input= \(input)")
         // need to break into words first
         let latinWords = words(from: input)
-        print("\(latinWords.count) words")
+        print("\(loggerID)|  \(latinWords.count) words")
         
         var built = ""
         for word in latinWords {
-            if verbose { print("Checking word \(word) in latin") }
+            if verbose { print("\(loggerID)| Checking word \(word) in latin") }
             
             let upper = word.uppercased()
             for char in upper {
                 let chars = LatinCharacters.allCases.filter { c in
                     c.comparator() == String(char)
                 }
-                print("chars = \(chars)")
+                print("\(loggerID)| chars = \(chars)")
                 for char in chars {
-                    built += char.toMorse()
+                    let m = char.toMorse()
+                    built += m
+                    print("\(loggerID)| +\(m)")
                     // only add letterspace to internal letters, ie not the last
                     if chars.firstIndex(of: char) != chars.endIndex {
                         built +=  Symbols.letterSpace.rawValue
-                        print("letterspace")
+                        print("\(loggerID)| +letterspace=' \(Symbols.letterSpace.rawValue)'")
                     }
                 }
             }
             // only add wordspace to not the last word
             if latinWords.firstIndex(of: word) != latinWords.endIndex {
-                print("wordspace")
+                print("\(loggerID)| +wordspace = '\(Symbols.wordSpace.rawValue)'")
                 built += Symbols.wordSpace.rawValue
             }
         }

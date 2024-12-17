@@ -28,6 +28,7 @@ public struct Morse {
         }
         return flag
     }
+    
     static public func isTextLatin(_ input: String) -> Bool {
         var flag = false
         input.forEach { c in
@@ -39,22 +40,33 @@ public struct Morse {
         return flag
     }
     
+    static public func words(from input: String) -> [String] {
+        input.split(separator: Symbols.letterSpace.rawValue).map({$0.uppercased()})
+    }
+    
     static public func morse(from input: String, verbose: Bool = false) -> String {
-        let upper = input.uppercased()
+        // need to break into words first
+        let latinWords = words(from: input)
+        
         var built = ""
+        for word in latinWords {
+            if verbose { print("Checking word \(word) in latin") }
+            
+            let upper = word.uppercased()
+            for char in upper {
+                let chars = LatinCharacters.allCases.filter { c in
+                    c.comparator() == String(char)
+                }
+                
+                for char in chars {
+                    built += char.toMorse()
+                    built +=  Symbols.letterSpace.rawValue
 
-        for char in upper {
-            let chars = LatinCharacters.allCases.filter { c in
-                c.comparator() == String(char)
+                }
             }
-
-            for char in chars {
-                built += char.toMorse()
-//                if char == .SPACE {
-//                 built +=  Symbols.letterSpace.rawValue
-//                }
-            }
+            built += Symbols.wordSpace.rawValue
         }
+     
 
         return built
     }

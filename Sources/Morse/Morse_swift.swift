@@ -52,7 +52,13 @@ public struct Morse {
     
     public struct StructuredMorsePhrase {
         var input:String = ""
-        var words:[StructuredMorseLetter] = [StructuredMorseLetter]()
+        var words:[StructuredMorseWord] = [StructuredMorseWord]()
+        var morse:String = ""
+    }
+    
+    public struct StructuredMorseWord {
+        var input:String = ""
+        var letters:[StructuredMorseLetter] = [StructuredMorseLetter]()
         var morse:String = ""
     }
     
@@ -70,6 +76,8 @@ public struct Morse {
         for word in latinWords {
             if verbose { print("\(loggerID)| Checking word \(word) in latin") }
             let upper = word.uppercased()
+            var sword = StructuredMorseWord()
+            sword.input = input
             
             for char in upper {
                 let chars = LatinCharacters.allCases.filter { c in
@@ -80,11 +88,13 @@ public struct Morse {
                     return match
                 }
                 print("\(loggerID)| chars = \(chars)")
-
+                
+                // need to refactor this to a function i htink
                 
                 for char in chars {
                     let m = char.toMorse()
-                    structuredPhrase.words.append(.init(latin: char, morse: m))
+                    sword.letters.append(.init(latin: char, morse: m))
+//                    structuredPhrase.words.append(.init(latin: char, morse: m))
                     built += m
                    
                     print("\(loggerID)| +\(m)")
@@ -92,14 +102,17 @@ public struct Morse {
                 }
             }
            
-            // only add wordspace to not the last word
-            if latinWords.firstIndex(of: word) != latinWords.endIndex {
-                print("\(loggerID)| +wordspace = '\(Symbols.wordSpace.rawValue)'")
-                built += Symbols.wordSpace.rawValue
-            }
-          
+//            // only add wordspace to not the last word
+//            if latinWords.firstIndex(of: word) != latinWords.endIndex {
+//                print("\(loggerID)| +wordspace = '\(Symbols.wordSpace.rawValue)'")
+//                built += Symbols.wordSpace.rawValue
+//            }
+            structuredPhrase.words.append(.init(input: LatinCharacters.SPACE.rawValue,
+                                                letters: [.init(latin: .SPACE,
+                                                                morse: "       ")],
+                                                morse: "       "))
         }
-        
+        structuredPhrase.morse = built
         return structuredPhrase
     }
     

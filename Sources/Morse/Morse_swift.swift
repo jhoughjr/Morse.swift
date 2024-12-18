@@ -81,13 +81,10 @@ public struct Morse {
             
             for char in upper {
                 let chars = LatinCharacters.allCases.filter { c in
-                    print("\(loggerID)| checking \(c) against \(char)")
                     let match = c.comparator() == String(char)
-                    print("\(loggerID)| match = \(match)")
-                    
                     return match
                 }
-                print("\(loggerID)| chars = \(chars)")
+//                print("\(loggerID)| chars = \(chars)")
                 
                 // need to refactor this to a function i htink
                 
@@ -96,16 +93,17 @@ public struct Morse {
                     sword.letters.append(.init(latin: char, morse: m))
                     built += m
                    
-                    print("\(loggerID)| +\(m)")
+//                    print("\(loggerID)| +\(m)")
                    
                 }
             }
             structuredPhrase.words.append(sword)
-            structuredPhrase.words.append(.init(input: " ", letters: [.init(latin: Morse.LatinCharacters.SPACE,
-                                                                            morse: "        ")]))
+            structuredPhrase.words.append(.init(input: " ",
+                                                letters: [.init(latin: Morse.LatinCharacters.SPACE,
+                                                                morse: "        ")]))
         }
-        
-        structuredPhrase.morse = built
+        structuredPhrase.words.removeLast(1) // last word needs no space and this is simplest way.
+        structuredPhrase.morse = built       // whole phrase morse is whole built output
         return structuredPhrase
     }
     

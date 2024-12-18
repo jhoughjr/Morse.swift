@@ -238,7 +238,7 @@ public struct Morse {
                 return self.rawValue
             } else {
 //                print("\(loggerID)| comparator> returning \(Symbols.wordSpace.rawValue)")
-                return Symbols.wordSpace.rawValue
+                return Symbols.letterSpace.rawValue
             }
 
         }

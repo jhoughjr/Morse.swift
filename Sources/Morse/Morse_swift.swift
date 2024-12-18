@@ -101,6 +101,8 @@ public struct Morse {
                 }
             }
             structuredPhrase.words.append(sword)
+            structuredPhrase.words.append(.init(input: " ", letters: [.init(latin: Morse.LatinCharacters.SPACE,
+                                                                            morse: "        ")]))
         }
         
         structuredPhrase.morse = built

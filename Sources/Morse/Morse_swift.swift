@@ -90,7 +90,7 @@ public struct Morse {
                 for char in chars {
                     let m = char.toMorse()
                     sword.letters.append(.init(latin: char, morse: m))
-                    builtWord += m
+                    builtWord += m + Morse.Symbols.letterSpace.rawValue
                 }
                 
             }

@@ -77,7 +77,7 @@ public struct Morse {
             if verbose { print("\(loggerID)| Checking word \(word) in latin") }
             let upper = word.uppercased()
             var sword = StructuredMorseWord()
-            sword.input = input
+            sword.input = word
             
             for char in upper {
                 let chars = LatinCharacters.allCases.filter { c in

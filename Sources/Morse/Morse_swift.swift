@@ -45,6 +45,64 @@ public struct Morse {
         input.split(separator: " ").map({$0.uppercased()})
     }
     
+    public struct StructuredMorseLetter {
+        let latin:LatinCharacters
+        let morse:String
+    }
+    
+    public struct StructuredMorsePhrase {
+        var input:String = ""
+        var words:[StructuredMorseLetter] = [StructuredMorseLetter]()
+        var morse:String = ""
+    }
+    
+    static public func structuredMorse(from input: String,
+                                       verbose: Bool = true) -> StructuredMorsePhrase {
+        print("\(loggerID)| input= \(input)")
+        // need to break into words first
+        let latinWords = words(from: input)
+        print("\(loggerID)|  \(latinWords.count) words")
+        
+        var structuredPhrase = StructuredMorsePhrase()
+        structuredPhrase.input = input
+        
+        var built = ""
+        for word in latinWords {
+            if verbose { print("\(loggerID)| Checking word \(word) in latin") }
+            let upper = word.uppercased()
+            
+            for char in upper {
+                let chars = LatinCharacters.allCases.filter { c in
+                    print("\(loggerID)| checking \(c) against \(char)")
+                    let match = c.comparator() == String(char)
+                    print("\(loggerID)| match = \(match)")
+                    
+                    return match
+                }
+                print("\(loggerID)| chars = \(chars)")
+
+                
+                for char in chars {
+                    let m = char.toMorse()
+                    structuredPhrase.words.append(.init(latin: char, morse: m))
+                    built += m
+                   
+                    print("\(loggerID)| +\(m)")
+                   
+                }
+            }
+           
+            // only add wordspace to not the last word
+            if latinWords.firstIndex(of: word) != latinWords.endIndex {
+                print("\(loggerID)| +wordspace = '\(Symbols.wordSpace.rawValue)'")
+                built += Symbols.wordSpace.rawValue
+            }
+          
+        }
+        
+        return structuredPhrase
+    }
+    
     static public func morse(from input: String, verbose: Bool = true) -> String {
         print("\(loggerID)| input= \(input)")
         // need to break into words first
@@ -65,8 +123,10 @@ public struct Morse {
                     return match
                 }
                 print("\(loggerID)| chars = \(chars)")
+                
                 for char in chars {
                     let m = char.toMorse()
+                    
                     built += m
                     print("\(loggerID)| +\(m)")
                     // only add letterspace to internal letters, ie not the last

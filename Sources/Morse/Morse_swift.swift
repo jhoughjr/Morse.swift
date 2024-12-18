@@ -72,38 +72,39 @@ public struct Morse {
         var structuredPhrase = StructuredMorsePhrase()
         structuredPhrase.input = input
         
-        var built = ""
+        var builtPhrase:String  = ""
         for word in latinWords {
+            var builtWord = ""
+            
             if verbose { print("\(loggerID)| Checking word \(word) in latin") }
             let upper = word.uppercased()
             var sword = StructuredMorseWord()
             sword.input = word
             
             for char in upper {
+                
                 let chars = LatinCharacters.allCases.filter { c in
                     let match = c.comparator() == String(char)
                     return match
                 }
-//                print("\(loggerID)| chars = \(chars)")
-                
-                // need to refactor this to a function i htink
-                
                 for char in chars {
                     let m = char.toMorse()
                     sword.letters.append(.init(latin: char, morse: m))
-                    built += m
-                   
-//                    print("\(loggerID)| +\(m)")
-                   
+                    builtWord += m
                 }
+                
             }
+            sword.morse = builtWord
+            builtPhrase += builtWord + "       "
+            
             structuredPhrase.words.append(sword)
             structuredPhrase.words.append(.init(input: " ",
                                                 letters: [.init(latin: Morse.LatinCharacters.SPACE,
                                                                 morse: "        ")]))
         }
+        
         structuredPhrase.words.removeLast(1) // last word needs no space and this is simplest way.
-        structuredPhrase.morse = built       // whole phrase morse is whole built output
+        structuredPhrase.morse = builtPhrase         // whole phrase morse is whole built output
         return structuredPhrase
     }
     

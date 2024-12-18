@@ -107,10 +107,7 @@ public struct Morse {
 //                print("\(loggerID)| +wordspace = '\(Symbols.wordSpace.rawValue)'")
 //                built += Symbols.wordSpace.rawValue
 //            }
-            structuredPhrase.words.append(.init(input: LatinCharacters.SPACE.rawValue,
-                                                letters: [.init(latin: .SPACE,
-                                                                morse: "       ")],
-                                                morse: "       "))
+            structuredPhrase.words.append(sword)
         }
         structuredPhrase.morse = built
         return structuredPhrase

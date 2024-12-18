@@ -46,20 +46,20 @@ public struct Morse {
     }
     
     public struct StructuredMorseLetter {
-        let latin:LatinCharacters
-        let morse:String
+        public let latin: LatinCharacters
+        public let morse:String
     }
     
     public struct StructuredMorsePhrase {
-        var input:String = ""
-        var words:[StructuredMorseWord] = [StructuredMorseWord]()
-        var morse:String = ""
+        public var input:String = ""
+        public var words:[StructuredMorseWord] = [StructuredMorseWord]()
+        public var morse:String = ""
     }
     
     public struct StructuredMorseWord {
-        var input:String = ""
-        var letters:[StructuredMorseLetter] = [StructuredMorseLetter]()
-        var morse:String = ""
+        public var input:String = ""
+        public var letters:[StructuredMorseLetter] = [StructuredMorseLetter]()
+        public var morse:String = ""
     }
     
     static public func structuredMorse(from input: String,
@@ -225,12 +225,12 @@ public struct Morse {
         }
     }
 
-    enum LatinCharacters: String, CaseIterable, MorseCodable {
-        static let name = "LatinCharacters"
+    public enum LatinCharacters: String, CaseIterable, MorseCodable {
+        static public let name = "LatinCharacters"
         case A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, SPACE,
             DOT, DASH
 
-        func comparator() -> String {
+        public func comparator() -> String {
             if self != .SPACE {
 //                print("\(loggerID)| comparator> returning \(self.rawValue)")
                 return self.rawValue
@@ -241,7 +241,7 @@ public struct Morse {
 
         }
 
-        func toMorse() -> String {
+        public func toMorse() -> String {
             switch self {
             case .A: return ".-"
             case .B: return "-..."

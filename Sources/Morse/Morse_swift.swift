@@ -94,21 +94,15 @@ public struct Morse {
                 for char in chars {
                     let m = char.toMorse()
                     sword.letters.append(.init(latin: char, morse: m))
-//                    structuredPhrase.words.append(.init(latin: char, morse: m))
                     built += m
                    
                     print("\(loggerID)| +\(m)")
                    
                 }
             }
-           
-//            // only add wordspace to not the last word
-//            if latinWords.firstIndex(of: word) != latinWords.endIndex {
-//                print("\(loggerID)| +wordspace = '\(Symbols.wordSpace.rawValue)'")
-//                built += Symbols.wordSpace.rawValue
-//            }
             structuredPhrase.words.append(sword)
         }
+        
         structuredPhrase.morse = built
         return structuredPhrase
     }
@@ -277,7 +271,7 @@ public struct Morse {
             case .X: return "-..-"
             case .Y: return "-.--"
             case .Z: return "--.."
-            case .SPACE: return " "  //
+            case .SPACE: return Morse.Symbols.wordSpace.rawValue
             case .DOT: return "."
             case .DASH: return "-"
             }

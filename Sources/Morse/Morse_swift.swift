@@ -100,7 +100,7 @@ public struct Morse {
             structuredPhrase.words.append(sword)
             structuredPhrase.words.append(.init(input: " ",
                                                 letters: [.init(latin: Morse.LatinCharacters.SPACE,
-                                                                morse: "        ")]))
+                                                                                                              morse: "        ")]))
         }
         
         structuredPhrase.words.removeLast(1) // last word needs no space and this is simplest way.
@@ -121,10 +121,7 @@ public struct Morse {
             let upper = word.uppercased()
             for char in upper {
                 let chars = LatinCharacters.allCases.filter { c in
-                    print("\(loggerID)| checking \(c) against \(char)")
                     let match = c.comparator() == String(char)
-                    print("\(loggerID)| match = \(match)")
-
                     return match
                 }
                 print("\(loggerID)| chars = \(chars)")

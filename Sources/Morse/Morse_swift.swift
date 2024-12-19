@@ -41,8 +41,12 @@ public struct Morse {
         return flag
     }
     
-    static public func words(from input: String) -> [String] {
+    static public func latinWords(from input: String) -> [String] {
         input.split(separator: " ").map({$0.uppercased()})
+    }
+    
+    static public func morseWords(from input: String) -> [String] {
+        input.split(separator: Symbols.wordSpace.rawValue).map({$0.uppercased()})
     }
     
     public struct StructuredMorseLetter {

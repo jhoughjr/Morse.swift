@@ -70,7 +70,7 @@ public struct Morse {
                                        verbose: Bool = true) -> StructuredMorsePhrase {
         print("\(loggerID)|structuredMorse from input= \(input)")
         // need to break into words first
-        let latinWords = words(from: input)
+        let latinWords = latinWords(from: input)
         print("\(loggerID)|  \(latinWords.count) words")
         
         var structuredPhrase = StructuredMorsePhrase()
@@ -115,7 +115,7 @@ public struct Morse {
     static public func morse(from input: String, verbose: Bool = true) -> String {
         print("\(loggerID)| input= \(input)")
         // need to break into words first
-        let latinWords = words(from: input)
+        let latinWords = latinWords(from: input)
         print("\(loggerID)|  \(latinWords.count) words")
         
         var built = ""
@@ -163,7 +163,7 @@ public struct Morse {
     static public func latin(from morse: String, verbose: Bool = false) -> String {
         var built = ""
 
-        let splitByWords = morse.split(separator: Symbols.wordSpace.rawValue)
+        let splitByWords = morseWords(from: morse)
         for word in splitByWords {
             if verbose { print("Checking word \(word) in morse") }
 

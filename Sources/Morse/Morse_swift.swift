@@ -119,21 +119,23 @@ public struct Morse {
             if verbose { print("\(loggerID)| Checking word \(word) in latin") }
             
             let upper = word.uppercased()
-            for char in upper {
-                let chars = LatinCharacters.allCases.filter { c in
-                    let match = c.comparator() == String(char)
+            for inputChar in upper {
+                
+                let latinChars = LatinCharacters.allCases.filter { c in
+                    let match = c.comparator() == String(inputChar)
                     return match
                 }
-                print("\(loggerID)| chars = \(chars)")
                 
-                for char in chars {
+                print("\(loggerID)| latinChars = \(latinChars)")
+                
+                for char in latinChars {
                     let m = char.toMorse()
                     
                     built += m
                     print("\(loggerID)| +\(m)")
                     // only add letterspace to internal letters, ie not the last
-                    let i = chars.firstIndex(of: char)
-                    let end = chars.endIndex
+                    let i = latinChars.firstIndex(of: char)
+                    let end = latinChars.endIndex
                     
                     print("\(loggerID)| i=\(i) \(end)")
                     if i != end {
@@ -142,6 +144,7 @@ public struct Morse {
                     }
                 }
             }
+            
             // only add wordspace to not the last word
             if latinWords.firstIndex(of: word) != latinWords.endIndex {
                 print("\(loggerID)| +wordspace = '\(Symbols.wordSpace.rawValue)'")

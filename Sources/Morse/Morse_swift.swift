@@ -136,6 +136,7 @@ public struct Morse {
                     print("\(loggerID)| +\(m)")
                     // add letterpsace
                     if letterIndex != upper.count - 1 {
+                        print("\(loggerID)| +\(Symbols.letterSpace)")
                         built += Symbols.letterSpace.rawValue
                     }
                     
@@ -143,6 +144,7 @@ public struct Morse {
                 }
             }
             if wordIndex != latinWords.count - 1 {
+                print("\(loggerID)| +\(Symbols.wordSpace)")
                 built += Symbols.wordSpace.rawValue
             }
             

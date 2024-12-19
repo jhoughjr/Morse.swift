@@ -119,6 +119,8 @@ public struct Morse {
             if verbose { print("\(loggerID)| Checking word \(word) in latin") }
             
             let upper = word.uppercased()
+            let enumeratedUpper = upper.enumerated()
+            
             for inputChar in upper {
                 
                 let latinChars = LatinCharacters.allCases.filter { c in
@@ -134,6 +136,13 @@ public struct Morse {
                     built += m
                     print("\(loggerID)| +\(m)")
                     // add letterpsace
+                    for (i,c) in enumeratedUpper {
+                        if i < upper.count - 1 {
+                            built += Symbols.letterSpace.rawValue
+                        }
+                        
+                    }
+                    
                 }
             }
             

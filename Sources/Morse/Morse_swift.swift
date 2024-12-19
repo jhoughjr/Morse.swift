@@ -42,11 +42,15 @@ public struct Morse {
     }
     
     static public func latinWords(from input: String) -> [String] {
-        input.split(separator: " ").map({$0.uppercased()})
+        let words = input.split(separator: " ").map({$0.uppercased()})
+        print("\(loggerID) words=\(words)")
+        return words
     }
     
     static public func morseWords(from input: String) -> [String] {
-        input.split(separator: Symbols.wordSpace.rawValue).map({$0.uppercased()})
+        let words = input.split(separator: Symbols.wordSpace.rawValue).map({$0.uppercased()})
+        print("\(loggerID) words=\(words)")
+        return words
     }
     
     public struct StructuredMorseLetter {
@@ -116,7 +120,7 @@ public struct Morse {
         print("\(loggerID)| input= \(input)")
         // need to break into words first
         let latinWords = latinWords(from: input)
-        print("\(loggerID)|  \(latinWords.count) words")
+        print("\(loggerID)| \(latinWords) \(latinWords.count) words")
         
         var built = ""
         var wordIndex = 0

@@ -115,12 +115,13 @@ public struct Morse {
         print("\(loggerID)|  \(latinWords.count) words")
         
         var built = ""
+        var wordIndex = 0
         for word in latinWords {
             if verbose { print("\(loggerID)| Checking word \(word) in latin") }
             
             let upper = word.uppercased()
             let enumeratedUpper = upper.enumerated()
-            
+            var letterIndex = 0
             for inputChar in upper {
                 
                 let latinChars = LatinCharacters.allCases.filter { c in
@@ -134,10 +135,18 @@ public struct Morse {
                     built += m
                     print("\(loggerID)| +\(m)")
                     // add letterpsace
-                    built += Symbols.letterSpace.rawValue
+                    if letterIndex != upper.count - 1 {
+                        built += Symbols.letterSpace.rawValue
+                    }
+                    
+                    letterIndex += 1
                 }
             }
-            built += Symbols.wordSpace.rawValue
+            if wordIndex != latinWords.count - 1 {
+                built += Symbols.wordSpace.rawValue
+            }
+            
+            wordIndex += 1
            //add wordspace
         }
      

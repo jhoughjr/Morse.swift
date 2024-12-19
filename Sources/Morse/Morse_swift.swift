@@ -64,7 +64,7 @@ public struct Morse {
     
     static public func structuredMorse(from input: String,
                                        verbose: Bool = true) -> StructuredMorsePhrase {
-        print("\(loggerID)| input= \(input)")
+        print("\(loggerID)|structuredMorse from input= \(input)")
         // need to break into words first
         let latinWords = words(from: input)
         print("\(loggerID)|  \(latinWords.count) words")
@@ -127,9 +127,7 @@ public struct Morse {
                     let match = c.comparator() == String(inputChar)
                     return match
                 }
-                
-                print("\(loggerID)| latinChars = \(latinChars)")
-                
+                                
                 for char in latinChars {
                     let m = char.toMorse()
                     

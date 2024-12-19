@@ -134,16 +134,10 @@ public struct Morse {
                     built += m
                     print("\(loggerID)| +\(m)")
                     // add letterpsace
-                    for (i,c) in enumeratedUpper {
-                        if i != upper.count - 1 {
-                            built += Symbols.letterSpace.rawValue
-                        }
-                        
-                    }
-                    
+                    built += Symbols.letterSpace.rawValue
                 }
             }
-            
+            built += Symbols.wordSpace.rawValue
            //add wordspace
         }
      

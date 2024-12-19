@@ -144,7 +144,7 @@ public struct Morse {
             }
             
             // only add wordspace to not the last word
-            if latinWords.firstIndex(of: word) != latinWords.endIndex {
+            if latinWords.firstIndex(of: word.uppercased()) != latinWords.endIndex {
                 print("\(loggerID)| +wordspace = '\(Symbols.wordSpace.rawValue)'")
                 built += Symbols.wordSpace.rawValue
             }

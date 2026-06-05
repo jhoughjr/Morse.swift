@@ -8,9 +8,17 @@ public struct Morse {
         func comparator() -> String
     }
 
+    // Shared punctuation table used by both encode and decode paths.
+    static let punctuationToMorse: [String: String] = [
+        ".": ".-.-.-", ",": "--..--", "?": "..--..", "'": ".----.",
+        "!": "-.-.--", "/": "-..-.", "(": "-.--.", ")": "-.--.-",
+        "&": ".-...", ":": "---...", ";": "-.-.-.", "=": "-...-",
+        "+": ".-.-.", "-": "-....-", "_": "..--.-", "\"": ".-..-.",
+        "$": "...-..-", "@": ".--.-."
+    ]
+
     //MARK -- Functions
     static public func KnownCodes() -> [any MorseCodable.Type] {
-
         [
             LatinCharacters.self,
             ArabicNumerals.self,
@@ -18,14 +26,9 @@ public struct Morse {
     }
     
     static public func isTextMorse(_ input: String) -> Bool {
-        // not optimal
         var flag = false
         input.forEach { c in
-            flag =
-                Symbols.allCases.filter({ c2 in
-                    return c2.rawValue == String(c)
-                }).count == input.count
-
+            flag = Symbols.allCases.filter({ $0.rawValue == String(c) }).count == input.count
         }
         return flag
     }
@@ -33,205 +36,130 @@ public struct Morse {
     static public func isTextLatin(_ input: String) -> Bool {
         var flag = false
         input.forEach { c in
-            flag =
-                LatinCharacters.allCases.filter({ c2 in
-                    return c2.comparator() == String(c)
-                }).count == input.count
+            flag = LatinCharacters.allCases.filter({ $0.comparator() == String(c) }).count == input.count
         }
         return flag
     }
     
     static public func latinWords(from input: String) -> [String] {
-        let words = input.split(separator: " ").map({$0.uppercased()})
-        print("\(loggerID) words=\(words)")
-        return words
+        input.split(separator: " ").map { $0.uppercased() }
     }
     
     static public func morseWords(from input: String) -> [String] {
-        let words = input.split(separator: Symbols.wordSpace.rawValue).map({$0.uppercased()})
-        print("\(loggerID) words=\(words)")
-        return words
+        input.split(separator: Symbols.wordSpace.rawValue).map { $0.uppercased() }
     }
     
     public struct StructuredMorseLetter {
         public let latin: LatinCharacters
-        public let morse:String
+        public let morse: String
     }
     
     public struct StructuredMorsePhrase {
-        public var input:String = ""
-        public var words:[StructuredMorseWord] = [StructuredMorseWord]()
-        public var morse:String = ""
+        public var input: String = ""
+        public var words: [StructuredMorseWord] = []
+        public var morse: String = ""
     }
     
     public struct StructuredMorseWord {
-        public var input:String = ""
-        public var letters:[StructuredMorseLetter] = [StructuredMorseLetter]()
-        public var morse:String = ""
+        public var input: String = ""
+        public var letters: [StructuredMorseLetter] = []
+        public var morse: String = ""
     }
     
-    static public func structuredMorse(from input: String,
-                                       verbose: Bool = true) -> StructuredMorsePhrase {
-        print("\(loggerID)|structuredMorse from input= \(input)")
-        // need to break into words first
-        let latinWords = latinWords(from: input)
-        print("\(loggerID)|  \(latinWords.count) words")
-        
-        var structuredPhrase = StructuredMorsePhrase()
-        structuredPhrase.input = input
-        
-        var builtPhrase:String  = ""
-        for word in latinWords {
-            var builtWord = ""
-            
-            if verbose { print("\(loggerID)| Checking word \(word) in latin") }
-            let upper = word.uppercased()
-            var sword = StructuredMorseWord()
-            sword.input = word
-            
-            for char in upper {
-                
-                let chars = LatinCharacters.allCases.filter { c in
-                    let match = c.comparator() == String(char)
-                    return match
+    static public func structuredMorse(from input: String, verbose: Bool = false) -> StructuredMorsePhrase {
+        let words = latinWords(from: input)
+        var phrase = StructuredMorsePhrase(input: input)
+        for word in words {
+            var sword = StructuredMorseWord(input: word)
+            for char in word {
+                let s = String(char)
+                if let lc = LatinCharacters.allCases.first(where: { $0.comparator() == s }) {
+                    sword.letters.append(.init(latin: lc, morse: lc.toMorse()))
                 }
-                for char in chars {
-                    let m = char.toMorse()
-                    sword.letters.append(.init(latin: char, morse: m))
-                    builtWord += m + Morse.Symbols.letterSpace.rawValue
-                }
-                
             }
-            sword.morse = builtWord
-            builtPhrase += builtWord + "       "
-            
-            structuredPhrase.words.append(sword)
-            structuredPhrase.words.append(.init(input: " ",
-                                                letters: [.init(latin: Morse.LatinCharacters.SPACE,
-                                                                                                              morse: "        ")]))
+            phrase.words.append(sword)
         }
-        
-        structuredPhrase.words.removeLast(1) // last word needs no space and this is simplest way.
-        structuredPhrase.morse = builtPhrase         // whole phrase morse is whole built output
-        return structuredPhrase
+        return phrase
     }
     
-    static public func morse(from input: String, verbose: Bool = true) -> String {
-        print("\(loggerID)| input= \(input)")
-        // need to break into words first
-        let latinWords = latinWords(from: input)
-        print("\(loggerID)| \(latinWords) \(latinWords.count) words")
-        
-        var built = ""
-        var wordIndex = 0
-        for word in latinWords {
-            if verbose { print("\(loggerID)| Checking word \(word) in latin") }
-            
-            let upper = word.uppercased()
-            let enumeratedUpper = upper.enumerated()
-            var letterIndex = 0
-            for inputChar in upper {
-                
-                let latinChars = LatinCharacters.allCases.filter { c in
-                    let match = c.comparator() == String(inputChar)
-                    return match
+    /// Encodes a latin/numeric/punctuation string to morse code.
+    static public func morse(from input: String, verbose: Bool = false) -> String {
+        let words = latinWords(from: input)
+        var builtWords: [String] = []
+        for word in words {
+            var letters: [String] = []
+            for inputChar in word {
+                let s = String(inputChar)
+                if let lc = LatinCharacters.allCases.first(where: { $0.comparator() == s }) {
+                    letters.append(lc.toMorse())
+                } else if let an = ArabicNumerals.allCases.first(where: { $0.comparator() == s }) {
+                    letters.append(an.toMorse())
+                } else if let p = punctuationToMorse[s] {
+                    letters.append(p)
                 }
-                                
-                for char in latinChars {
-                    let m = char.toMorse()
-                    
-                    built += m
-                    print("\(loggerID)| +\(m)")
-                    // add letterpsace
-                    if letterIndex != upper.count - 1 {
-                        print("\(loggerID)| +\(Symbols.letterSpace)")
-                        built += Symbols.letterSpace.rawValue
-                    }
-                    
-                    letterIndex += 1
-                }
+                // unknown characters are silently skipped
             }
-            if wordIndex != latinWords.count - 1 {
-                print("\(loggerID)| +\(Symbols.wordSpace)")
-                built += Symbols.wordSpace.rawValue
+            if !letters.isEmpty {
+                builtWords.append(letters.joined(separator: Symbols.letterSpace.rawValue))
             }
-            
-            wordIndex += 1
-           //add wordspace
         }
-     
-
-        return built
+        return builtWords.joined(separator: Symbols.wordSpace.rawValue)
     }
     
+    /// Decodes a morse code string back to latin text.
     static public func latin(from morse: String, verbose: Bool = false) -> String {
+        let morseToPunct = Dictionary(uniqueKeysWithValues: punctuationToMorse.map { ($1, $0) })
         var built = ""
-
-        let splitByWords = morseWords(from: morse)
-        for word in splitByWords {
-            if verbose { print("Checking word \(word) in morse") }
-
+        let words = morseWords(from: morse)
+        for word in words {
             let letters = word.split(separator: Symbols.letterSpace.rawValue)
             for unknownLetter in letters {
-                for letter in LatinCharacters.allCases.filter({ c in
-                    return true
-                }) {
-                    //                    print("checking \(unknownLetter) : for morse letter \(letter.rawValue)")
-                    if letter.toMorse() == unknownLetter {
-                        if verbose { print("\(unknownLetter) is \(letter)") }
-
-                        built += letter.rawValue
-                    }
+                let ls = String(unknownLetter)
+                if let lc = LatinCharacters.allCases.first(where: { $0.toMorse() == ls }) {
+                    built += lc.rawValue
+                } else if let an = ArabicNumerals.allCases.first(where: { $0.toMorse() == ls }) {
+                    built += an.comparator()
+                } else if let p = morseToPunct[ls] {
+                    built += p
                 }
             }
             built += " "
         }
-        
-        return built //.trimmingCharacters(in: .whitespacesAndNewlines)
+        return built
     }
 
     //MARK -- Enums
-    enum ArabicNumerals: String, CaseIterable, MorseCodable {
-        static let name = "ArabicNumerals"
+    public enum ArabicNumerals: String, CaseIterable, MorseCodable {
+        static public let name = "ArabicNumerals"
         case ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO
-        func comparator() -> String {
-            switch self {
 
-            case .ONE:
-                "1"
-            case .TWO:
-                "2"
-            case .THREE:
-                "3"
-            case .FOUR:
-                "4"
-            case .FIVE:
-                "5"
-            case .SIX:
-                "6"
-            case .SEVEN:
-                "7"
-            case .EIGHT:
-                "8"
-            case .NINE:
-                "9"
-            case .ZERO:
-                "0"
+        public func comparator() -> String {
+            switch self {
+            case .ONE:   return "1"
+            case .TWO:   return "2"
+            case .THREE: return "3"
+            case .FOUR:  return "4"
+            case .FIVE:  return "5"
+            case .SIX:   return "6"
+            case .SEVEN: return "7"
+            case .EIGHT: return "8"
+            case .NINE:  return "9"
+            case .ZERO:  return "0"
             }
         }
 
-        func toMorse() -> String {
+        public func toMorse() -> String {
             switch self {
-            case .ONE: return ".----"
-            case .TWO: return "..---"
+            case .ONE:   return ".----"
+            case .TWO:   return "..---"
             case .THREE: return "...--"
-            case .FOUR: return "....-"
-            case .FIVE: return "....."
-            case .SIX: return "-...."
+            case .FOUR:  return "....-"
+            case .FIVE:  return "....."
+            case .SIX:   return "-...."
             case .SEVEN: return "--..."
             case .EIGHT: return "---.."
-            case .NINE: return "----."
-            case .ZERO: return "-----"
+            case .NINE:  return "----."
+            case .ZERO:  return "-----"
             }
         }
     }
@@ -242,14 +170,7 @@ public struct Morse {
             DOT, DASH
 
         public func comparator() -> String {
-            if self != .SPACE {
-//                print("\(loggerID)| comparator> returning \(self.rawValue)")
-                return self.rawValue
-            } else {
-//                print("\(loggerID)| comparator> returning \(Symbols.wordSpace.rawValue)")
-                return Symbols.letterSpace.rawValue
-            }
-
+            self != .SPACE ? self.rawValue : Symbols.letterSpace.rawValue
         }
 
         public func toMorse() -> String {
@@ -269,47 +190,40 @@ public struct Morse {
             case .M: return "--"
             case .N: return "-."
             case .O: return "---"
-            case .P: return ".--"
+            case .P: return ".--."
             case .Q: return "--.-"
             case .R: return ".-."
             case .S: return "..."
             case .T: return "-"
             case .U: return "..-"
             case .V: return "...-"
-            case .W: return ".--.-"
+            case .W: return ".--"
             case .X: return "-..-"
             case .Y: return "-.--"
             case .Z: return "--.."
             case .SPACE: return Morse.Symbols.wordSpace.rawValue
-            case .DOT: return "."
-            case .DASH: return "-"
+            case .DOT:  return ".-.-.-"
+            case .DASH: return "-....-"
             }
         }
     }
 
     public enum Symbols: String, CaseIterable {
+        case dit        = "."    // base time unit
+        case dah        = "-"    // 3 dits
+        case infraSpace = " "    // space within character (1 dit)
+        case letterSpace = "   " // space between letters (3 dits)
+        case wordSpace  = "       " // space between words (7 dits)
         
-        case dit = "."  // base time unit
-        case dah = "-"  // 3 dits
-        case infraSpace = " "  // space within character (1 dit)
-        case letterSpace = "   "  // space between letters (3 dits)
-        case wordSpace = "       "  // space between words (7 dits)
-        
-        static public func ditTime() -> Double {
-            0.1
-        }
+        static public func ditTime() -> Double { 0.1 }
         
         static public func Timings() -> [String: Double] {
             [
-                // base time unit
-                Symbols.dit.rawValue: ditTime(),
-                Symbols.dah.rawValue: 3 * ditTime(),
-                // space between symbols in the same letter
-                Symbols.infraSpace.rawValue: ditTime(),
-                // space between letters in the same word
+                Symbols.dit.rawValue:         ditTime(),
+                Symbols.dah.rawValue:         3 * ditTime(),
+                Symbols.infraSpace.rawValue:  ditTime(),
                 Symbols.letterSpace.rawValue: 3 * ditTime(),
-                // space between words
-                Symbols.wordSpace.rawValue: 7 * ditTime(),
+                Symbols.wordSpace.rawValue:   7 * ditTime(),
             ]
         }
     }

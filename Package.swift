@@ -14,7 +14,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0"),
-        .package(url: "https://github.com/jtodaone/jhoughjt/Morse.swift.git", branch: "main"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -25,14 +24,14 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "MorseTests",
-            dependencies: ["Morse"]
+            dependencies: ["Morse"],
+            path: "Tests/Morse.swiftTests"
         ),
         .executableTarget(
             name: "morset",
             dependencies: [
-                .product(name: "Morse", package: "Morse.swift"),
+                "Morse",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-
             ]),
     ]
 )
